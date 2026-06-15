@@ -80,10 +80,37 @@ cd erp-frontend-v2
 npm install
 npm run dev
 ```
-
 ## 📸 Screenshots
 
-> Dashboard with real-time analytics, HR management, Inventory tracking, Sales & Purchasing modules.
+### 📊 Dashboard
+
+| English | Arabic |
+|----------|---------|
+| ![](./screenshots/en/Dashboard.png) | ![](./screenshots/ar/Dashboard.png) |
+
+### 👥 HR Management
+
+| English | Arabic |
+|----------|---------|
+| ![](./screenshots/en/HR.png) | ![](./screenshots/ar/HR.png) |
+
+### 📦 Inventory Management
+
+| English | Arabic |
+|----------|---------|
+| ![](./screenshots/en/Inventory.png) | ![](./screenshots/ar/Inventory.png) |
+
+### 💰 Sales Management
+
+| English | Arabic |
+|----------|---------|
+| ![](./screenshots/en/Sales.png) | ![](./screenshots/ar/Sales.png) |
+
+### 📈 Reports & Analytics
+
+| English | Arabic |
+|----------|---------|
+| ![](./screenshots/en/Reports.png) | ![](./screenshots/ar/Reports.png) |
 
 ## 🔑 Default Credentials
 
