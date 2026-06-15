@@ -92,7 +92,7 @@ npm run dev
 
 | English | Arabic |
 |----------|---------|
-| ![](./screenshots/en/HR.png) | ![](./screenshots/ar/HR.png) |
+| ![](./screenshots/en/Hr.png) | ![](./screenshots/ar/Hr.png) |
 
 ### 📦 Inventory Management
 
