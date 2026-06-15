@@ -1,0 +1,19 @@
+{
+    "title": "Inventory",
+    "subtitle": "Manage products and stock levels",
+    "products": "Products",
+    "lowStock": "Low Stock",
+    "addProduct": "Add Product",
+    "productName": "Product Name",
+    "sku": "SKU",
+    "category": "Category",
+    "price": "Price",
+    "costPrice": "Cost Price",
+    "stock": "Stock",
+    "minStockLevel": "Min Stock Level",
+    "description": "Description",
+    "inStock": "In Stock",
+    "addStock": "Add Stock",
+    "currentStock": "Current Stock",
+    "quantityToAdd": "Quantity to Add"
+}

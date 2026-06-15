@@ -1,0 +1,16 @@
+{
+    "title": "HR Management",
+    "subtitle": "Manage employees and departments",
+    "employees": "Employees",
+    "departments": "Departments",
+    "addEmployee": "Add Employee",
+    "addDepartment": "Add Department",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "position": "Position",
+    "salary": "Salary",
+    "hireDate": "Hire Date",
+    "department": "Department",
+    "active": "Active",
+    "terminated": "Terminated"
+}

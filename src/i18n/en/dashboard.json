@@ -1,0 +1,19 @@
+{
+    "welcome": "Welcome back",
+    "subtitle": "Here's what's happening in your business today",
+    "totalRevenue": "Total Revenue",
+    "totalOrders": "Total Orders",
+    "totalEmployees": "Total Employees",
+    "unpaidInvoices": "Unpaid Invoices",
+    "topProducts": "Top Products by Sales",
+    "employeesByDept": "Employees by Department",
+    "ordersSummary": "Orders Summary",
+    "financeSummary": "Finance Summary",
+    "hrSummary": "HR Summary",
+    "pending": "Pending",
+    "delivered": "Delivered",
+    "cancelled": "Cancelled",
+    "totalPaid": "Total Paid",
+    "totalUnpaid": "Total Unpaid",
+    "fromLastMonth": "from last month"
+}

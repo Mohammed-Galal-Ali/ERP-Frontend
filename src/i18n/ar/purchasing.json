@@ -1,0 +1,16 @@
+{
+    "title": "المشتريات",
+    "subtitle": "إدارة أوامر الشراء والموردين",
+    "orders": "أوامر الشراء",
+    "suppliers": "الموردون",
+    "newOrder": "أمر شراء جديد",
+    "addSupplier": "إضافة مورد",
+    "supplier": "المورد",
+    "contactPerson": "مسؤول التواصل",
+    "confirm": "تأكيد",
+    "receive": "استلام",
+    "cancel": "إلغاء",
+    "createOrder": "إنشاء أمر شراء",
+    "selectSupplier": "اختر المورد",
+    "unitCost": "سعر الوحدة"
+}

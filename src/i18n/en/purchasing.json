@@ -1,0 +1,16 @@
+{
+    "title": "Purchasing",
+    "subtitle": "Manage purchase orders and suppliers",
+    "orders": "Purchase Orders",
+    "suppliers": "Suppliers",
+    "newOrder": "New Order",
+    "addSupplier": "Add Supplier",
+    "supplier": "Supplier",
+    "contactPerson": "Contact Person",
+    "confirm": "Confirm",
+    "receive": "Receive",
+    "cancel": "Cancel",
+    "createOrder": "Create Purchase Order",
+    "selectSupplier": "Select Supplier",
+    "unitCost": "Unit Cost"
+}

@@ -1,0 +1,16 @@
+{
+    "title": "الموارد البشرية",
+    "subtitle": "إدارة الموظفين والأقسام",
+    "employees": "الموظفون",
+    "departments": "الأقسام",
+    "addEmployee": "إضافة موظف",
+    "addDepartment": "إضافة قسم",
+    "firstName": "الاسم الأول",
+    "lastName": "اسم العائلة",
+    "position": "المسمى الوظيفي",
+    "salary": "الراتب",
+    "hireDate": "تاريخ التعيين",
+    "department": "القسم",
+    "active": "نشط",
+    "terminated": "منتهي الخدمة"
+}

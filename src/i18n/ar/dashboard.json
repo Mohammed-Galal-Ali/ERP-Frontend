@@ -1,0 +1,19 @@
+{
+    "welcome": "مرحباً بعودتك",
+    "subtitle": "إليك ما يحدث في عملك اليوم",
+    "totalRevenue": "إجمالي الإيرادات",
+    "totalOrders": "إجمالي الطلبات",
+    "totalEmployees": "إجمالي الموظفين",
+    "unpaidInvoices": "الفواتير غير المدفوعة",
+    "topProducts": "أفضل المنتجات مبيعاً",
+    "employeesByDept": "الموظفون حسب القسم",
+    "ordersSummary": "ملخص الطلبات",
+    "financeSummary": "الملخص المالي",
+    "hrSummary": "ملخص الموارد البشرية",
+    "pending": "معلق",
+    "delivered": "مسلّم",
+    "cancelled": "ملغي",
+    "totalPaid": "إجمالي المدفوع",
+    "totalUnpaid": "إجمالي غير المدفوع",
+    "fromLastMonth": "من الشهر الماضي"
+}

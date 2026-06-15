@@ -1,0 +1,19 @@
+{
+    "title": "المخزون",
+    "subtitle": "إدارة المنتجات ومستويات المخزون",
+    "products": "المنتجات",
+    "lowStock": "مخزون منخفض",
+    "addProduct": "إضافة منتج",
+    "productName": "اسم المنتج",
+    "sku": "رمز المنتج",
+    "category": "الفئة",
+    "price": "السعر",
+    "costPrice": "سعر التكلفة",
+    "stock": "المخزون",
+    "minStockLevel": "الحد الأدنى للمخزون",
+    "description": "الوصف",
+    "inStock": "متوفر",
+    "addStock": "إضافة مخزون",
+    "currentStock": "المخزون الحالي",
+    "quantityToAdd": "الكمية المراد إضافتها"
+}
