@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { hrApi } from '../../api/hr';
 import type { Employee, Department } from '../../types';
-import { Users, Building2, Plus, Pencil, Trash2, X } from 'lucide-react';
+import { Users, Building2, Plus, Pencil, Trash2, X, Search } from 'lucide-react';
 import { usePermissions } from '../../hooks/usePermissions';
 import { useTranslation } from 'react-i18next';
 
@@ -13,6 +13,10 @@ export default function HRPage() {
     const [showAddEmployee, setShowAddEmployee] = useState(false);
     const [showAddDepartment, setShowAddDepartment] = useState(false);
     const [editEmployee, setEditEmployee] = useState<Employee | null>(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalCount, setTotalCount] = useState(0);
+    const [search, setSearch] = useState('');
+    const pageSize = 10;
     const { can } = usePermissions();
     const { t } = useTranslation('hr');
     const { t: tc } = useTranslation('common');
@@ -20,10 +24,11 @@ export default function HRPage() {
     const fetchData = async () => {
         try {
             const [empRes, deptRes] = await Promise.all([
-                hrApi.getEmployees(),
+                hrApi.getEmployees(currentPage, pageSize, search),
                 hrApi.getDepartments(),
             ]);
             setEmployees(empRes.data?.data || []);
+            setTotalCount(empRes.data?.totalCount || 0);
             setDepartments(deptRes.data || []);
         } catch (err) {
             console.error(err);
@@ -32,8 +37,7 @@ export default function HRPage() {
         }
     };
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(() => { fetchData(); }, []);
+    useEffect(() => { fetchData(); }, [currentPage, search]);
 
     const handleDeleteEmployee = async (id: string) => {
         if (!confirm('Are you sure?')) return;
@@ -67,7 +71,7 @@ export default function HRPage() {
                 </div>
                 <div className="flex items-center gap-3">
                     <span className="flex items-center gap-1.5 bg-blue-50 text-blue-600 text-sm px-3 py-1.5 rounded-lg font-medium">
-                        <Users size={14} /> {employees.length} {t('employees')}
+                        <Users size={14} /> {totalCount} {t('employees')}
                     </span>
                     <span className="flex items-center gap-1.5 bg-purple-50 text-purple-600 text-sm px-3 py-1.5 rounded-lg font-medium">
                         <Building2 size={14} /> {departments.length} {t('departments')}
@@ -106,6 +110,21 @@ export default function HRPage() {
             {/* Employees Table */}
             {activeTab === 'employees' && (
                 <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+
+                    {/* Search */}
+                    <div className="p-4 border-b border-slate-200">
+                        <div className="relative w-64">
+                            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                            <input
+                                type="text"
+                                placeholder="Search employees..."
+                                value={search}
+                                onChange={e => { setSearch(e.target.value); setCurrentPage(1); }}
+                                className="pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                            />
+                        </div>
+                    </div>
+
                     <table className="w-full">
                         <thead>
                             <tr className="bg-slate-50 border-b border-slate-200">
@@ -169,6 +188,28 @@ export default function HRPage() {
                             ))}
                         </tbody>
                     </table>
+
+                    {/* Pagination */}
+                    <div className="flex items-center justify-between px-6 py-4 border-t border-slate-200">
+                        <p className="text-sm text-slate-500">
+                            Showing {Math.min(((currentPage - 1) * pageSize) + 1, totalCount)}–{Math.min(currentPage * pageSize, totalCount)} of {totalCount}
+                        </p>
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => setCurrentPage(p => p - 1)}
+                                disabled={currentPage === 1}
+                                className="px-3 py-1.5 text-sm border border-slate-300 rounded-lg disabled:opacity-50 hover:bg-slate-50">
+                                Previous
+                            </button>
+                            <span className="text-sm text-slate-600">Page {currentPage} of {Math.ceil(totalCount / pageSize)}</span>
+                            <button
+                                onClick={() => setCurrentPage(p => p + 1)}
+                                disabled={currentPage * pageSize >= totalCount}
+                                className="px-3 py-1.5 text-sm border border-slate-300 rounded-lg disabled:opacity-50 hover:bg-slate-50">
+                                Next
+                            </button>
+                        </div>
+                    </div>
                 </div>
             )}
 

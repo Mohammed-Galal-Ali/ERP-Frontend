@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { inventoryApi } from '../../api/inventory';
 import type { Product } from '../../types';
-import { Package, AlertTriangle, CheckCircle, Tag, Plus, Pencil, Trash2, X, PlusCircle } from 'lucide-react';
+import { Package, AlertTriangle, CheckCircle, Tag, Plus, Pencil, Trash2, X, PlusCircle, Search } from 'lucide-react';
 import { usePermissions } from '../../hooks/usePermissions';
 import { useTranslation } from 'react-i18next';
 interface Category { id: string; name: string; }
@@ -13,16 +13,21 @@ export default function InventoryPage() {
     const [showAddProduct, setShowAddProduct] = useState(false);
     const [editProduct, setEditProduct] = useState<Product | null>(null);
     const [addStockProduct, setAddStockProduct] = useState<Product | null>(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalCount, setTotalCount] = useState(0);
+    const [search, setSearch] = useState('');
+    const pageSize = 10;
     const { can } = usePermissions();
 const { t } = useTranslation('inventory');
 const { t: tc } = useTranslation('common');
     const fetchData = async () => {
         try {
             const [prodRes, catRes] = await Promise.all([
-                inventoryApi.getProducts(),
+                inventoryApi.getProducts(currentPage, pageSize, search),
                 inventoryApi.getCategories(),
             ]);
             setProducts(prodRes.data?.data || []);
+            setTotalCount(prodRes.data?.totalCount || 0);
             setCategories(catRes.data?.data || []);
         } catch (err) {
             console.error(err);
@@ -31,8 +36,7 @@ const { t: tc } = useTranslation('common');
         }
     };
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(() => { fetchData(); }, []);
+    useEffect(() => { fetchData(); }, [currentPage, search]);
 
     const handleDelete = async (id: string) => {
         if (!confirm('Are you sure you want to delete this product?')) return;
@@ -68,7 +72,7 @@ const { t: tc } = useTranslation('common');
                 </div>
                 <div className="flex items-center gap-3">
                     <div className="flex items-center gap-1.5 bg-blue-50 text-blue-600 text-sm px-3 py-1.5 rounded-lg font-medium">
-                        <Package size={14} /> {products.length} {t('products')}
+                        <Package size={14} /> {totalCount} {t('products')}
                     </div>
                     {lowStockCount > 0 && (
                         <div className="flex items-center gap-1.5 bg-red-50 text-red-600 text-sm px-3 py-1.5 rounded-lg font-medium">
@@ -88,6 +92,21 @@ const { t: tc } = useTranslation('common');
 
             {/* Products Table */}
             <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+
+                {/* Search */}
+                <div className="p-4 border-b border-slate-200">
+                    <div className="relative w-64">
+                        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                        <input
+                            type="text"
+                            placeholder="Search products..."
+                            value={search}
+                            onChange={e => { setSearch(e.target.value); setCurrentPage(1); }}
+                            className="pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                        />
+                    </div>
+                </div>
+
                 <table className="w-full">
                     <thead>
                         <tr className="bg-slate-50 border-b border-slate-200">
@@ -183,6 +202,28 @@ const { t: tc } = useTranslation('common');
                         ))}
                     </tbody>
                 </table>
+
+                {/* Pagination */}
+                <div className="flex items-center justify-between px-6 py-4 border-t border-slate-200">
+                    <p className="text-sm text-slate-500">
+                        Showing {Math.min(((currentPage - 1) * pageSize) + 1, totalCount)}–{Math.min(currentPage * pageSize, totalCount)} of {totalCount}
+                    </p>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => setCurrentPage(p => p - 1)}
+                            disabled={currentPage === 1}
+                            className="px-3 py-1.5 text-sm border border-slate-300 rounded-lg disabled:opacity-50 hover:bg-slate-50">
+                            Previous
+                        </button>
+                        <span className="text-sm text-slate-600">Page {currentPage} of {Math.ceil(totalCount / pageSize)}</span>
+                        <button
+                            onClick={() => setCurrentPage(p => p + 1)}
+                            disabled={currentPage * pageSize >= totalCount}
+                            className="px-3 py-1.5 text-sm border border-slate-300 rounded-lg disabled:opacity-50 hover:bg-slate-50">
+                            Next
+                        </button>
+                    </div>
+                </div>
             </div>
 
             {/* Modals */}

@@ -2,8 +2,8 @@ import api from './axios';
 import type { PagedResult, Employee, Department } from '../types';
 
 export const hrApi = {
-    getEmployees: (page = 1, pageSize = 10) =>
-        api.get<PagedResult<Employee>>(`/hr/employee?page=${page}&pageSize=${pageSize}`),
+   getEmployees: (page = 1, pageSize = 10, search = '') =>
+    api.get<PagedResult<Employee>>(`/hr/employee?page=${page}&pageSize=${pageSize}&search=${search}`),
 
     getDepartments: () =>
         api.get<Department[]>(`/hr/department`),

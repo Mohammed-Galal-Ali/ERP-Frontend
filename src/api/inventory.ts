@@ -2,8 +2,8 @@ import api from './axios';
 import type { PagedResult, Product } from '../types';
 
 export const inventoryApi = {
-    getProducts: (page = 1, pageSize = 10) =>
-        api.get<PagedResult<Product>>(`/inventory/product?page=${page}&pageSize=${pageSize}`),
+    getProducts: (page = 1, pageSize = 10, search = '') =>
+        api.get<PagedResult<Product>>(`/inventory/product?page=${page}&pageSize=${pageSize}&search=${search}`),
 
     getCategories: () =>
     api.get<{ data: { id: string; name: string; }[] }>(`/inventory/category`),
