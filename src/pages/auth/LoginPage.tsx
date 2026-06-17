@@ -93,6 +93,25 @@ export default function LoginPage() {
                             ) : 'Sign In'}
                         </button>
                     </div>
+                    {/* Demo Credentials */}
+<div className="mt-6 bg-white/5 border border-white/10 rounded-lg p-4">
+    <p className="text-xs text-slate-400 font-medium mb-3 text-center">🔍 Demo Account — Read Only</p>
+    <div className="space-y-2">
+        <button
+            onClick={() => { setEmail('demo@erp.com'); setPassword('Demo@1234'); }}
+            className="w-full flex items-center justify-between px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg transition-all group cursor-pointer">
+            <div className="text-left">
+                <p className="text-xs text-slate-400">Email</p>
+                <p className="text-sm text-white font-medium">demo@erp.com</p>
+            </div>
+            <div className="text-left">
+                <p className="text-xs text-slate-400">Password</p>
+                <p className="text-sm text-white font-medium">Demo@1234</p>
+            </div>
+            <span className="text-xs text-blue-400 group-hover:text-blue-300 transition-colors">Click to fill →</span>
+        </button>
+    </div>
+</div>
                 </div>
             </div>
         </div>
