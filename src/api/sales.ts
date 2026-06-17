@@ -2,14 +2,14 @@ import api from './axios';
 import type { PagedResult, SalesOrder, Customer, Invoice } from '../types';
 
 export const salesApi = {
-    getOrders: (page = 1, pageSize = 10) =>
-        api.get<PagedResult<SalesOrder>>(`/sales/salesorder?page=${page}&pageSize=${pageSize}`),
+    getOrders: (page = 1, pageSize = 10, search = '') =>
+        api.get<PagedResult<SalesOrder>>(`/sales/salesorder?page=${page}&pageSize=${pageSize}&search=${search}`),
 
-    getCustomers: (page = 1, pageSize = 10) =>
-        api.get<PagedResult<Customer>>(`/sales/customer?page=${page}&pageSize=${pageSize}`),
+    getCustomers: (page = 1, pageSize = 10, search = '') =>
+        api.get<PagedResult<Customer>>(`/sales/customer?page=${page}&pageSize=${pageSize}&search=${search}`),
 
-    getInvoices: (page = 1, pageSize = 10) =>
-        api.get<PagedResult<Invoice>>(`/sales/invoice?page=${page}&pageSize=${pageSize}`),
+    getInvoices: (page = 1, pageSize = 10, search = '') =>
+        api.get<PagedResult<Invoice>>(`/sales/invoice?page=${page}&pageSize=${pageSize}&search=${search}`),
 
     createOrder: (data: {
         customerId: string;

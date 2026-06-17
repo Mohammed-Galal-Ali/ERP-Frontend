@@ -4,7 +4,7 @@ import { inventoryApi } from '../../api/inventory';
 import type { SalesOrder, Customer, Invoice, Product } from '../../types';
 import {
     ShoppingCart, Users, FileText, CheckCircle,
-    Clock, XCircle, DollarSign, Plus, X
+    Clock, XCircle, DollarSign, Plus, X, Search
 } from 'lucide-react';
 import { usePermissions } from '../../hooks/usePermissions';
 import { useTranslation } from 'react-i18next';
@@ -18,6 +18,21 @@ export default function SalesPage() {
     const [showCreateOrder, setShowCreateOrder] = useState(false);
     const [showCreateCustomer, setShowCreateCustomer] = useState(false);
     const [showCreateInvoice, setShowCreateInvoice] = useState<SalesOrder | null>(null);
+
+    // Pagination & Search
+    const [ordersPage, setOrdersPage] = useState(1);
+    const [ordersTotalCount, setOrdersTotalCount] = useState(0);
+    const [ordersSearch, setOrdersSearch] = useState('');
+
+    const [customersPage, setCustomersPage] = useState(1);
+    const [customersTotalCount, setCustomersTotalCount] = useState(0);
+    const [customersSearch, setCustomersSearch] = useState('');
+
+    const [invoicesPage, setInvoicesPage] = useState(1);
+    const [invoicesTotalCount, setInvoicesTotalCount] = useState(0);
+    const [invoicesSearch, setInvoicesSearch] = useState('');
+
+    const pageSize = 10;
     const { can } = usePermissions();
     const { t } = useTranslation('sales');
     const { t: tc } = useTranslation('common');
@@ -25,13 +40,16 @@ export default function SalesPage() {
     const fetchData = async () => {
         try {
             const [ordersRes, customersRes, invoicesRes] = await Promise.all([
-                salesApi.getOrders(),
-                salesApi.getCustomers(),
-                salesApi.getInvoices(),
+                salesApi.getOrders(ordersPage, pageSize, ordersSearch),
+                salesApi.getCustomers(customersPage, pageSize, customersSearch),
+                salesApi.getInvoices(invoicesPage, pageSize, invoicesSearch),
             ]);
             setOrders(ordersRes.data?.data || []);
+            setOrdersTotalCount(ordersRes.data?.totalCount || 0);
             setCustomers(customersRes.data?.data || []);
+            setCustomersTotalCount(customersRes.data?.totalCount || 0);
             setInvoices(invoicesRes.data?.data || []);
+            setInvoicesTotalCount(invoicesRes.data?.totalCount || 0);
         } catch (err) {
             console.error(err);
         } finally {
@@ -39,8 +57,7 @@ export default function SalesPage() {
         }
     };
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(() => { fetchData(); }, []);
+    useEffect(() => { fetchData(); }, [ordersPage, ordersSearch, customersPage, customersSearch, invoicesPage, invoicesSearch]);
 
     const handleConfirm = async (id: string) => {
         try { await salesApi.confirmOrder(id); fetchData(); }
@@ -104,10 +121,10 @@ export default function SalesPage() {
                 </div>
                 <div className="flex items-center gap-3">
                     <div className="flex items-center gap-1.5 bg-blue-50 text-blue-600 text-sm px-3 py-1.5 rounded-lg font-medium">
-                        <ShoppingCart size={14} /> {orders.length} {t('orders')}
+                        <ShoppingCart size={14} /> {ordersTotalCount} {t('orders')}
                     </div>
                     <div className="flex items-center gap-1.5 bg-purple-50 text-purple-600 text-sm px-3 py-1.5 rounded-lg font-medium">
-                        <Users size={14} /> {customers.length} {t('customers')}
+                        <Users size={14} /> {customersTotalCount} {t('customers')}
                     </div>
                     {can('Sales.Create') && activeTab === 'orders' && (
                         <button onClick={() => setShowCreateOrder(true)}
@@ -144,6 +161,15 @@ export default function SalesPage() {
             {/* Orders Tab */}
             {activeTab === 'orders' && (
                 <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+                    <div className="p-4 border-b border-slate-200">
+                        <div className="relative w-64">
+                            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                            <input type="text" placeholder="Search orders..."
+                                value={ordersSearch}
+                                onChange={e => { setOrdersSearch(e.target.value); setOrdersPage(1); }}
+                                className="pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full" />
+                        </div>
+                    </div>
                     <table className="w-full">
                         <thead>
                             <tr className="bg-slate-50 border-b border-slate-200">
@@ -210,12 +236,33 @@ export default function SalesPage() {
                             ))}
                         </tbody>
                     </table>
+                    <div className="flex items-center justify-between px-6 py-4 border-t border-slate-200">
+                        <p className="text-sm text-slate-500">
+                            Showing {Math.min(((ordersPage - 1) * pageSize) + 1, ordersTotalCount)}–{Math.min(ordersPage * pageSize, ordersTotalCount)} of {ordersTotalCount}
+                        </p>
+                        <div className="flex items-center gap-2">
+                            <button onClick={() => setOrdersPage(p => p - 1)} disabled={ordersPage === 1}
+                                className="px-3 py-1.5 text-sm border border-slate-300 rounded-lg disabled:opacity-50 hover:bg-slate-50">Previous</button>
+                            <span className="text-sm text-slate-600">Page {ordersPage} of {Math.ceil(ordersTotalCount / pageSize)}</span>
+                            <button onClick={() => setOrdersPage(p => p + 1)} disabled={ordersPage * pageSize >= ordersTotalCount}
+                                className="px-3 py-1.5 text-sm border border-slate-300 rounded-lg disabled:opacity-50 hover:bg-slate-50">Next</button>
+                        </div>
+                    </div>
                 </div>
             )}
 
             {/* Customers Tab */}
             {activeTab === 'customers' && (
                 <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+                    <div className="p-4 border-b border-slate-200">
+                        <div className="relative w-64">
+                            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                            <input type="text" placeholder="Search customers..."
+                                value={customersSearch}
+                                onChange={e => { setCustomersSearch(e.target.value); setCustomersPage(1); }}
+                                className="pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full" />
+                        </div>
+                    </div>
                     <table className="w-full">
                         <thead>
                             <tr className="bg-slate-50 border-b border-slate-200">
@@ -244,12 +291,33 @@ export default function SalesPage() {
                             ))}
                         </tbody>
                     </table>
+                    <div className="flex items-center justify-between px-6 py-4 border-t border-slate-200">
+                        <p className="text-sm text-slate-500">
+                            Showing {Math.min(((customersPage - 1) * pageSize) + 1, customersTotalCount)}–{Math.min(customersPage * pageSize, customersTotalCount)} of {customersTotalCount}
+                        </p>
+                        <div className="flex items-center gap-2">
+                            <button onClick={() => setCustomersPage(p => p - 1)} disabled={customersPage === 1}
+                                className="px-3 py-1.5 text-sm border border-slate-300 rounded-lg disabled:opacity-50 hover:bg-slate-50">Previous</button>
+                            <span className="text-sm text-slate-600">Page {customersPage} of {Math.ceil(customersTotalCount / pageSize)}</span>
+                            <button onClick={() => setCustomersPage(p => p + 1)} disabled={customersPage * pageSize >= customersTotalCount}
+                                className="px-3 py-1.5 text-sm border border-slate-300 rounded-lg disabled:opacity-50 hover:bg-slate-50">Next</button>
+                        </div>
+                    </div>
                 </div>
             )}
 
             {/* Invoices Tab */}
             {activeTab === 'invoices' && (
                 <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+                    <div className="p-4 border-b border-slate-200">
+                        <div className="relative w-64">
+                            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                            <input type="text" placeholder="Search invoices..."
+                                value={invoicesSearch}
+                                onChange={e => { setInvoicesSearch(e.target.value); setInvoicesPage(1); }}
+                                className="pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full" />
+                        </div>
+                    </div>
                     <table className="w-full">
                         <thead>
                             <tr className="bg-slate-50 border-b border-slate-200">
@@ -308,6 +376,18 @@ export default function SalesPage() {
                             ))}
                         </tbody>
                     </table>
+                    <div className="flex items-center justify-between px-6 py-4 border-t border-slate-200">
+                        <p className="text-sm text-slate-500">
+                            Showing {Math.min(((invoicesPage - 1) * pageSize) + 1, invoicesTotalCount)}–{Math.min(invoicesPage * pageSize, invoicesTotalCount)} of {invoicesTotalCount}
+                        </p>
+                        <div className="flex items-center gap-2">
+                            <button onClick={() => setInvoicesPage(p => p - 1)} disabled={invoicesPage === 1}
+                                className="px-3 py-1.5 text-sm border border-slate-300 rounded-lg disabled:opacity-50 hover:bg-slate-50">Previous</button>
+                            <span className="text-sm text-slate-600">Page {invoicesPage} of {Math.ceil(invoicesTotalCount / pageSize)}</span>
+                            <button onClick={() => setInvoicesPage(p => p + 1)} disabled={invoicesPage * pageSize >= invoicesTotalCount}
+                                className="px-3 py-1.5 text-sm border border-slate-300 rounded-lg disabled:opacity-50 hover:bg-slate-50">Next</button>
+                        </div>
+                    </div>
                 </div>
             )}
 
@@ -329,7 +409,6 @@ export default function SalesPage() {
         </div>
     );
 }
-
 // ===== Create Order Modal =====
 function CreateOrderModal({ customers, onClose, onSuccess }: {
     customers: Customer[]; onClose: () => void; onSuccess: () => void;
